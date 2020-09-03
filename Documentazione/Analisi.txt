@@ -1,0 +1,9 @@
+id | Descrizione | Priorità | Versione
+------------------------------------
+1 | Installare e configurare una XAMPP | 1 | 1.0
+2 | Installare MySQL Workbench | 1 | 1.0
+3 | Progettare una diagramma E-R | 1 | 1.0
+4 | Implementare tabelle | 1 | 1.0
+5 | Progettazione del sito web | 1 | 1.0
+6 | Creazione del sito di login | 1 | 1.0
+7 | Creazione dei siti per ogni ruolo
