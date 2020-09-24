@@ -1,2 +1,3 @@
 # CatalogoConnessioneRete
-Repository di Veljko Markovic, progetto: Catalogo Connessione Rete
+Repository di Veljko Markovic
+Progetto: Catalogo Connessione Rete
