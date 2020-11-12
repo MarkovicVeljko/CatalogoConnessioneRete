@@ -5,10 +5,10 @@ USE catalogo_connessioni_rete;
 CREATE TABLE utente
 (
 	nome_login VARCHAR(25) PRIMARY KEY,
-    pass VARCHAR(64) NOT NULL,
+    pass VARCHAR(32) NOT NULL,
     nome VARCHAR(25) NOT NULL,
     cognome VARCHAR(25) NOT NULL,
-    ruolo ENUM('Amministatore','Operatore','Viewer') NOT NULL
+    ruolo ENUM('Amministratore','Operatore','Viewer') NOT NULL
 );
 
 CREATE TABLE switch
@@ -46,3 +46,5 @@ CREATE TABLE porta
     FOREIGN KEY (cavo_tipo) REFERENCES cavo(tipo),
     FOREIGN KEY (dispositivo_tipo) REFERENCES dispositivo(tipo)
 );
+
+INSERT INTO utente VALUES('Admin', 'fa838cb64417ac5d8eedc7112d54e11c', 'Veljko', 'Markovic', 'Amministratore');
