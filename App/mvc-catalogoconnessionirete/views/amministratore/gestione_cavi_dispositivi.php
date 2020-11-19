@@ -1,0 +1,1 @@
+Gestione cavi e dispositivi

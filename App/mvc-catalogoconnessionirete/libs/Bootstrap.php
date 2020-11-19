@@ -20,6 +20,7 @@ class Bootstrap {
             require $file;
         } else {
             $this->error();
+            return false;
         }
 
         $controller = new $url[0];
@@ -49,6 +50,5 @@ class Bootstrap {
         require 'controllers/frameworkerror.php';
         $controller = new FrameworkError();
         $controller->index();
-        return false;
     }
 }

@@ -6,14 +6,15 @@ class Login extends Controller {
     }
 
     function index() {
-        $this->view->render('login/index');
+        Session::init();
+        if(Session::get('loggedIn') == false) {
+            $this->view->render('login/index');
+        }else {
+            header('location: ' . Session::get('role'));
+        }
     }
 
     function run() {
         $this->model->run();
-    }
-
-    function esi() {
-        echo 1;
     }
 }

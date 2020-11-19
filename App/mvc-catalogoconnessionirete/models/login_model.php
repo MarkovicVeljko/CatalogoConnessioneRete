@@ -10,7 +10,7 @@ class Login_Model extends Model {
             $nome_login = htmlspecialchars($_POST['nome_login']);
             $pass = $_POST['pass'];
 
-            $sth = $this->db->prepare("SELECT nome_login FROM utente WHERE
+            $sth = $this->db->prepare("SELECT nome_login, ruolo FROM utente WHERE
                 nome_login = :nome_login AND pass = MD5(:pass)");
             $sth->execute(array(
                 ':nome_login' => $nome_login,
@@ -24,14 +24,13 @@ class Login_Model extends Model {
                 Session::init();
                 Session::set('loggedIn', true);
 
-                /*$results = $sth->fetchAll();
-                foreach ($results as $data) {
-                    foreach ($data as $d) {
-                        echo $d . "<br>";
-                    }
-                }*/
-
-                header('location: ../dashboard');
+                $results = $sth->fetchAll();
+                Session::set('user', $results[0][0]);
+                
+                $controllerToCall = strtolower($results[0][1]);
+                Session::set('role', $controllerToCall);
+                
+                header('location: ../' . $controllerToCall);
             }else {
                 header('location: ../login');
             }
