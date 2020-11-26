@@ -34,8 +34,6 @@ class Login_Model extends Model {
             }else {
                 header('location: ../login');
             }
-        }else {
-            echo 1;
         }
     }
 }
