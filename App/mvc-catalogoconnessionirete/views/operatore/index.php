@@ -1,1 +1,2 @@
-Bravo sei un operatore...
+<h1 class="text-center text-success">Benvenuto <?php echo Session::get('user'); ?>! Sei entrato come Operatore!</h1>
+<h4 class="text-center text-info">Inizia a lavorare selezionando le voci sulla barra in alto!</h4>

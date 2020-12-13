@@ -1,6 +1,6 @@
 <?php
 
-class Amministratore extends Controller {
+class Amministratore extends Controller {    
     function __construct() {
         parent::__construct();
 
@@ -23,17 +23,16 @@ class Amministratore extends Controller {
         $this->view->render('amministratore/index');
     }
 
-    function run() {
-        $this->model->run();
-    }
-
     function page($type) {
         if($type == "utenti") {
             $utenti = $this->getUsers();
             $this->view->render('amministratore/gestione_utenti', false, $utenti);
         }else {
             $cavi = $this->getCables();
-            $this->view->render('amministratore/gestione_cavi_dispositivi', false, $cavi);
+            $dispositivi = $this->getDevices();
+
+            $data = array($cavi, $dispositivi);
+            $this->view->render('amministratore/gestione_cavi_dispositivi', false, $data);
         }
     }
 
@@ -44,6 +43,9 @@ class Amministratore extends Controller {
     function getCables() {
         return $this->model->getCables();
     }
+    function getDevices() {
+        return $this->model->getDevices();
+    }
 
     function action($type) {
         if(isset($_POST['update'])) {
@@ -51,12 +53,16 @@ class Amministratore extends Controller {
                 $this->updateUser();
             }else if($type == 'cable') {
                 $this->updateCable();
-            }            
+            }else if($type == 'device') {
+                $this->updateDevice();
+            }
         }else if(isset($_POST['delete'])) {
             if($type == 'user') {
                 $this->deleteUser();
             }else if($type == 'cable') {
                 $this->deleteCable();
+            }else if ($type == 'device') {
+                $this->deleteDevice();
             }
         }
     }
@@ -108,7 +114,7 @@ class Amministratore extends Controller {
     }
 
     function createCable() {
-        if($_POST['new_tipo'] != '' && isset($_POST['new_id'])) {
+        if($_POST['new_tipo'] != '' && $_POST['new_id'] != '') {
             $id = $_POST['new_id'];
             $tipo = htmlspecialchars($_POST['new_tipo']);
             $descrizione = htmlspecialchars($_POST['new_descrizione']);
@@ -119,7 +125,7 @@ class Amministratore extends Controller {
     }
 
     function updateCable() {
-        if($_POST['tipo'] != '' && isset($_POST['id_cavo'])) {
+        if($_POST['tipo'] != '' && $_POST['id_cavo'] != '') {
             $old_id = $_POST['old_id'];
             $old_tipo = htmlspecialchars($_POST['old_tipo']);
             $id = $_POST['id_cavo'];
@@ -132,10 +138,46 @@ class Amministratore extends Controller {
     }
 
     function deleteCable() {
-        if(isset($_POST['id_cavo']) && $_POST['id_cavo'] != '-') {
+        if(isset($_POST['selector']) && $_POST['selector'] != '-') {
             $id = $_POST['id_cavo'];
             $this->model->deleteCable($id);
         }else {
+            $this->failure("delete");
+        }
+    }
+
+    function createDevice()
+    {
+        if ($_POST['new_tipo'] != '' && $_POST['new_id'] != '') {
+            $id = $_POST['new_id'];
+            $tipo = htmlspecialchars($_POST['new_tipo']);
+            $descrizione = htmlspecialchars($_POST['new_descrizione']);
+            $this->model->createDevice($id, $tipo, $descrizione);
+        } else {
+            $this->failure("param_vuoti");
+        }
+    }
+
+    function updateDevice()
+    {
+        if ($_POST['tipo'] != '' && $_POST['id_dispositivo'] != '') {
+            $old_id = $_POST['old_id'];
+            $old_tipo = htmlspecialchars($_POST['old_tipo']);
+            $id = $_POST['id_dispositivo'];
+            $tipo = htmlspecialchars($_POST['tipo']);
+            $descrizione = htmlspecialchars($_POST['descrizione']);
+            $this->model->updateDevice($old_id, $old_tipo, $id, $tipo, $descrizione);
+        } else {
+            $this->failure("param_vuoti");
+        }
+    }
+
+    function deleteDevice()
+    {
+        if (isset($_POST['selector']) && $_POST['selector'] != '-') {
+            $id = $_POST['id_dispositivo'];
+            $this->model->deleteDevice($id);
+        } else {
             $this->failure("delete");
         }
     }

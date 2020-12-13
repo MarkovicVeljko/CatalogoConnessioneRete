@@ -5,40 +5,6 @@ class Amministratore_Model extends Model {
         parent::__construct();
     }
 
-    public function run() {
-        if(isset($_POST['nome_login']) && isset($_POST['pass'])) {
-            $nome_login = htmlspecialchars($_POST['nome_login']);
-            $pass = $_POST['pass'];
-
-            $sth = $this->db->prepare("SELECT nome_login, ruolo FROM utente WHERE
-                nome_login = :nome_login AND pass = MD5(:pass)");
-            $sth->execute(array(
-                ':nome_login' => $nome_login,
-                ':pass' => $pass
-            ));
-            
-            $count = $sth->rowCount();
-            
-            if($count > 0) {
-                // login
-                Session::init();
-                Session::set('loggedIn', true);
-
-                $results = $sth->fetchAll();
-                Session::set('user', $results[0][0]);
-                
-                $controllerToCall = strtolower($results[0][1]);
-                Session::set('role', $controllerToCall);
-                
-                header('location: ../' . $controllerToCall);
-            }else {
-                header('location: ../login');
-            }
-        }else {
-            echo 1;
-        }
-    }
-
     public function getUsers() {
         $sth = $this->db->prepare("SELECT * FROM utente");
         $sth->execute();
@@ -48,6 +14,14 @@ class Amministratore_Model extends Model {
 
     public function getCables() {
         $sth = $this->db->prepare("SELECT * FROM cavo");
+        $sth->execute();
+
+        return $sth->fetchAll();
+    }
+
+    public function getDevices()
+    {
+        $sth = $this->db->prepare("SELECT * FROM dispositivo");
         $sth->execute();
 
         return $sth->fetchAll();
@@ -132,7 +106,7 @@ class Amministratore_Model extends Model {
     }
 
     public function createCable($id, $tipo, $descrizione) {
-        if($this->uniqueIdAndTipo($id, $tipo)) {
+        if($this->uniqueCableId($id)) {
             $sth = $this->db->prepare("INSERT INTO cavo
                 VALUES(:id, :tipo, :descrizione)");
             $sth->execute(array(
@@ -152,7 +126,7 @@ class Amministratore_Model extends Model {
     }
 
     public function updateCable($old_id, $old_tipo, $id, $tipo, $descrizione) {
-        $canProceed = ($old_id == $id) ? true : $this->uniqueIdAndTipo($id);
+        $canProceed = ($old_id == $id) ? true : $this->uniqueCableId($id);
 
         if($canProceed) {
             $sth = $this->db->prepare("UPDATE cavo
@@ -172,7 +146,7 @@ class Amministratore_Model extends Model {
                 header('location: ' . URL . 'amministratore/failure/query');
             }
         }else {
-            //header('location: ' . URL . 'amministratore/failure/query');
+            header('location: ' . URL . 'amministratore/failure/query');
         }
     }
 
@@ -190,7 +164,69 @@ class Amministratore_Model extends Model {
         }
     }
 
-    function uniqueIdAndTipo($id) {
+    public function createDevice($id, $tipo, $descrizione)
+    {
+        if ($this->uniqueDeviceId($id)) {
+            $sth = $this->db->prepare("INSERT INTO dispositivo
+                VALUES(:id, :tipo, :descrizione)");
+            $sth->execute(array(
+                ':id' => $id,
+                ':tipo' => $tipo,
+                ':descrizione' => ($descrizione == '') ? '-' : $descrizione
+            ));
+
+            if ($sth->rowCount() > 0) {
+                header('location: ' . URL . 'amministratore/success');
+            } else {
+                header('location: ' . URL . 'amministratore/failure/query');
+            }
+        } else {
+            header('location: ' . URL . 'amministratore/failure/query');
+        }
+    }
+
+    public function updateDevice($old_id, $old_tipo, $id, $tipo, $descrizione)
+    {
+        $canProceed = ($old_id == $id) ? true : $this->uniqueDeviceId($id);
+
+        if ($canProceed) {
+            $sth = $this->db->prepare("UPDATE dispositivo
+                SET id = :id, tipo = :tipo, descrizione = :descrizione
+                WHERE id = :old_id AND tipo = :old_tipo");
+            $sth->execute(array(
+                ':id' => $id,
+                ':tipo' => $tipo,
+                ':descrizione' => ($descrizione == '') ? '-' : $descrizione,
+                ':old_id' => $old_id,
+                ':old_tipo' => $old_tipo
+            ));
+
+            if ($sth->rowCount() > 0) {
+                header('location: ' . URL . 'amministratore/success');
+            } else {
+                header('location: ' . URL . 'amministratore/failure/query');
+            }
+        } else {
+            header('location: ' . URL . 'amministratore/failure/query');
+        }
+    }
+
+    public function deleteDevice($id)
+    {
+        $sth = $this->db->prepare("DELETE FROM dispositivo
+            WHERE id = :id");
+        $sth->execute(array(
+            ':id' => $id
+        ));
+
+        if ($sth->rowCount() > 0) {
+            header('location: ' . URL . 'amministratore/success');
+        } else {
+            header('location: ' . URL . 'amministratore/failure/query');
+        }
+    }
+
+    function uniqueCableId($id) {
         $sth = $this->db->prepare("SELECT id FROM cavo WHERE
             id = :id");
         $sth->execute(array(
@@ -202,6 +238,23 @@ class Amministratore_Model extends Model {
         if($count == 0) {
             return true;
         }else {
+            return false;
+        }
+    }
+
+    function uniqueDeviceId($id)
+    {
+        $sth = $this->db->prepare("SELECT id FROM dispositivo WHERE
+            id = :id");
+        $sth->execute(array(
+            ':id' => $id
+        ));
+
+        $count = $sth->rowCount();
+
+        if ($count == 0) {
+            return true;
+        } else {
             return false;
         }
     }
