@@ -1,3 +1,4 @@
+DROP DATABASE IF EXISTS catalogo_connessioni_rete;
 CREATE DATABASE catalogo_connessioni_rete;
 
 USE catalogo_connessioni_rete;
@@ -47,4 +48,8 @@ CREATE TABLE porta
     FOREIGN KEY (dispositivo_tipo) REFERENCES dispositivo(tipo)
 );
 
-INSERT INTO utente VALUES('Admin', 'fa838cb64417ac5d8eedc7112d54e11c', 'Veljko', 'Markovic', 'Amministratore');
+INSERT INTO utente VALUES('Admin', 'fa838cb64417ac5d8eedc7112d54e11c', 'Admin', 'Admin', 'Amministratore');
+
+DROP USER IF EXISTS 'switchroot'@'localhost';
+CREATE USER 'switchroot'@'localhost' IDENTIFIED BY 'Password&1';
+GRANT ALL ON catalogo_connessioni_rete.* TO 'switchroot'@'localhost';
