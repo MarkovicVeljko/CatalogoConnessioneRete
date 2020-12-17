@@ -5,7 +5,7 @@ USE catalogo_connessioni_rete;
 
 CREATE TABLE utente
 (
-	nome_login VARCHAR(25) PRIMARY KEY,
+    nome_login VARCHAR(25) PRIMARY KEY,
     pass VARCHAR(32) NOT NULL,
     nome VARCHAR(25) NOT NULL,
     cognome VARCHAR(25) NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE utente
 
 CREATE TABLE switch
 (
-	id VARCHAR(25) PRIMARY KEY,
+    id VARCHAR(25) PRIMARY KEY,
     modello VARCHAR(25) NOT NULL,
     posizione VARCHAR(60) NOT NULL,
     numero_porte INT NOT NULL
@@ -22,7 +22,7 @@ CREATE TABLE switch
 
 CREATE TABLE cavo
 (
-	id INT,
+    id INT,
     tipo VARCHAR(35),
     descrizione VARCHAR(80) DEFAULT '-',
     PRIMARY KEY(tipo, id)
@@ -30,7 +30,7 @@ CREATE TABLE cavo
 
 CREATE TABLE dispositivo
 (
-	id INT,
+    id INT,
     tipo VARCHAR(35),
     descrizione VARCHAR(80) DEFAULT '-',
     PRIMARY KEY(tipo, id)
@@ -38,7 +38,7 @@ CREATE TABLE dispositivo
 
 CREATE TABLE porta
 (
-	switch_id VARCHAR(25),
+    switch_id VARCHAR(25),
     numero_porta INT,
     cavo_tipo VARCHAR(35),
     dispositivo_tipo VARCHAR(35),
