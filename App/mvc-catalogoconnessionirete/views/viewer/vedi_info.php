@@ -5,6 +5,7 @@
             var ports = <?php echo json_encode($data[1]); ?>;
             document.getElementById("nome_switch").innerHTML = document.getElementById("selector").value;
             switchh = (document.getElementById('selector').value).split(",")[1];
+            document.cookie = "switch=" + switchh;
 
             $(".to_delete").remove();
 
@@ -75,7 +76,7 @@
                             foreach ($data[1] as $key => $value) {
                                 if ($value['switch_id'] == $_COOKIE['switch']) {
                                     echo "<tr class='to_delete'>";
-                                    echo "<td value='" . $value['numero_porta'] . "'>" . $value['switch_id'] . "</td>";
+                                    echo "<td value='" . $value['numero_porta'] . "'>" . $value['numero_porta'] . "</td>";
                                     echo "<td value='" . $value['cavo_tipo'] . "'>" . $value['cavo_tipo'] . "</td>";
                                     echo "<td value='" . $value['dispositivo_tipo'] . "'>" . $value['dispositivo_tipo'] . "</td>";
                                     echo "</tr>";
